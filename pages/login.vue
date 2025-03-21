@@ -3,7 +3,7 @@
     <h1 class="text-3xl font-bold text-center mb-8">Welcome to Recipebase</h1>
     <h2 class="text-2xl font-bold mb-6">{{ isRegister ? 'Register' : 'Login' }}</h2>
     
-    <!-- Social Login Buttons -->
+    <!-- Social Login Button -->
     <div class="space-y-3 mb-6">
       <button
         @click="handleSocialLogin('google')"
@@ -11,22 +11,6 @@
       >
         <img src="/google.svg" alt="Google" class="w-5 h-5" />
         Continue with Google
-      </button>
-
-      <button
-        @click="handleSocialLogin('github')"
-        class="w-full flex items-center justify-center gap-2 bg-gray-900 text-white py-2 px-4 rounded hover:bg-gray-700"
-      >
-        <img src="/github.svg" alt="GitHub" class="w-5 h-5" />
-        Continue with GitHub
-      </button>
-
-      <button
-        @click="handleSocialLogin('facebook')"
-        class="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-      >
-        <img src="/facebook.svg" alt="Facebook" class="w-5 h-5" />
-        Continue with Facebook
       </button>
     </div>
 
@@ -122,22 +106,10 @@ const handleSubmit = async () => {
   }
 }
 
-const handleSocialLogin = async (provider: 'google' | 'github' | 'facebook') => {
+const handleSocialLogin = async (provider: 'google') => {
   try {
     loading.value = true
-    let success = false
-
-    switch (provider) {
-      case 'google':
-        success = await auth.signInWithGoogle()
-        break
-      case 'github':
-        success = await auth.signInWithGithub()
-        break
-      case 'facebook':
-        success = await auth.signInWithFacebook()
-        break
-    }
+    const success = await auth.signInWithGoogle()
 
     if (success) {
       router.push('/')

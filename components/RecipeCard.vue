@@ -53,7 +53,7 @@
             >-</button>
             
             <button
-              @click.stop="addToCart"
+              @click.stop="handleAddToCart"
               class="bg-yellow-500 text-black px-3 py-2 rounded-lg hover:bg-yellow-400 transition-colors"
               :class="{ 'rounded-none': isInCart }"
             >
@@ -77,7 +77,9 @@ import { ref, computed } from 'vue'
 import type { Recipe } from '~/types'
 import { useAuth } from '~/composables/useAuth'
 import { useCart } from '~/composables/useCart'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const auth = useAuth()
 const cart = useCart()
 
@@ -99,7 +101,12 @@ const isInCart = computed(() => {
   return cart.items.some(item => item.recipe.id === props.recipe.id)
 })
 
-const addToCart = () => {
+const handleAddToCart = () => {
+  if (!auth.isAuthenticated) {
+    router.push('/login')
+    return
+  }
+
   if (!isInCart.value) {
     cart.addToCart(props.recipe)
   }
@@ -116,6 +123,11 @@ const cartItem = computed(() => {
 })
 
 const updateQuantity = (change: number) => {
+  if (!auth.isAuthenticated) {
+    router.push('/login')
+    return
+  }
+
   if (cartItem.value) {
     const newQty = Math.max(0, cartItem.value.quantity + change)
     if (newQty === 0) {
